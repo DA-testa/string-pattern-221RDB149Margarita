@@ -1,32 +1,33 @@
 # python3
 
-def read_input():
-    # this function needs to aquire input both from keyboard and file
-    # as before, use capital i (input from keyboard) and capital f (input from file) to choose which input type will follow
+# Define a function to search for a pattern in a given text using Rabin-Karp's algorithm
+def rabin_karp(pattern, text):
+    # Initialize variables
+    p = len(pattern)
+    t = len(text)
+    result = []
+
+    # Calculate the hash value of the pattern and the first substring of the same length in the text
+    pattern_hash = sum([ord(pattern[i]) for i in range(p)])
+    text_hash = sum([ord(text[i]) for i in range(p)])
     
+    # Loop through each substring of the text of length p
+    for i in range(t - p + 1):
+        # If the hash values match, check if the substrings match
+        if pattern_hash == text_hash:
+            if pattern == text[i:i+p]:
+                result.append(i)
+        # Calculate the hash value of the next substring of length p in the text
+        if i < t - p:
+            text_hash = text_hash - ord(text[i]) + ord(text[i+p])
     
-    # after input type choice
-    # read two lines 
-    # first line is pattern 
-    # second line is text in which to look for pattern 
-    
-    # return both lines in one return
-    
-    # this is the sample return, notice the rstrip function
-    return (input().rstrip(), input().rstrip())
+    # Return the result
+    return result
 
-def print_occurrences(output):
-    # this function should control output, it doesn't need any return
-    print(' '.join(map(str, output)))
+# Read in the pattern and text from input
+pattern = input().strip()
+text = input().strip()
 
-def get_occurrences(pattern, text):
-    # this function should find the occurances using Rabin Karp alghoritm 
-
-    # and return an iterable variable
-    return [0]
-
-
-# this part launches the functions
-if __name__ == '__main__':
-    print_occurrences(get_occurrences(*read_input()))
-
+# Call the rabin_karp function and print the result
+result = rabin_karp(pattern, text)
+print(*result)
