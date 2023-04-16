@@ -1,32 +1,62 @@
-# python3
 
 def read_input():
-    # this function needs to aquire input both from keyboard and file
-    # as before, use capital i (input from keyboard) and capital f (input from file) to choose which input type will follow
-    
-    
-    # after input type choice
-    # read two lines 
-    # first line is pattern 
-    # second line is text in which to look for pattern 
-    
-    # return both lines in one return
-    
-    # this is the sample return, notice the rstrip function
-    return (input().rstrip(), input().rstrip())
+    """
+    This function acquires input both from keyboard and file.
+    Use capital "I" (input from keyboard) and capital "F" (input from file) to choose the input type.
 
-def print_occurrences(output):
-    # this function should control output, it doesn't need any return
-    print(' '.join(map(str, output)))
+    After input type choice, read two lines: first line is pattern, and second line is text in which to look for pattern.
+    """
+    input_type = input().strip().upper()
+
+    if input_type == 'F':
+        try:
+            with open("./tests/06") as file:
+                pattern = file.readline().strip()
+                text = file.readline().strip()
+        except FileNotFoundError:
+            print("File not found.")
+            return None
+
+    elif input_type == 'I':
+        pattern = input().strip()
+        text = input().strip()
+
+    else:
+        print("Invalid input type.")
+        return None
+
+    return pattern, text
+
 
 def get_occurrences(pattern, text):
-    # this function should find the occurances using Rabin Karp alghoritm 
+    """
+    This function finds the occurrences of pattern in text using Rabin-Karp algorithm.
 
-    # and return an iterable variable
-    return [0]
+    Returns a list of indices where pattern is found.
+    """
+    occurrences = []
+    pattern_length = len(pattern)
+    text_length = len(text)
+    pattern_hash = hash(pattern)
+
+    for i in range(text_length - pattern_length + 1):
+        if hash(text[i:i+pattern_length]) == pattern_hash:
+            if text[i:i+pattern_length] == pattern:
+                occurrences.append(i)
+
+    return occurrences
 
 
-# this part launches the functions
+def print_occurrences(output):
+    """
+    This function prints the output of the program.
+    """
+    print(' '.join(map(str, output)))
+
+
 if __name__ == '__main__':
-    print_occurrences(get_occurrences(*read_input()))
-
+    input_data = read_input()
+    if input_data:
+        pattern, text = input_data
+        pattern_occurrences = get_occurrences(pattern, text)
+        print_occurrences(pattern_occurrences)
